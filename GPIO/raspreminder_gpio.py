@@ -101,36 +101,35 @@ GPIO.add_event_detect(door, GPIO.RISING)
 # Door callback function, runs whenever the door is opened
 def door_callback():
     print("Door was opened at "+datetime.datetime.now().isoformat())
-    if time.time() - countdown >= 10:
-        # Someone is leaving and is forgeting their keys
-        if GPIO.input(keys) and GPIO.input(human):
-            t = Thread(target=remind)
-            t.start()
-            return
-        # Someone is leaving and the keys are already gone
-        elif not GPIO.input(keys) and GPIO.input(human):
-            return
-
-        # Door is opening but no is leaving so wait until human is present
-        while not GPIO.input(human):
-            # check if the door was closed and no one came in
-            if GPIO.input(door):
-                print("Door was closed at "+datetime.datetime.now().isoformat())
-                return
-            continue
-
-        print("Human present at "+datetime.datetime.now().isoformat())
-        
-        # Take picture and upload
-        camera.capture('image.jpg')
-        print("Picture taken at "+datetime.datetime.now().isoformat())
-        t = Thread(target=uploadGD)
+    # Someone is leaving and is forgeting their keys
+    if GPIO.input(keys) and GPIO.input(human):
+        t = Thread(target=remind)
         t.start()
-    countdown = time.time()
+        return
+    # Someone is leaving and the keys are already gone
+    elif not GPIO.input(keys) and GPIO.input(human):
+        return
+
+    # Door is opening but no is leaving so wait until human is present
+    while not GPIO.input(human):
+        # check if the door was closed and no one came in
+        if GPIO.input(door):
+            print("Door was closed at "+datetime.datetime.now().isoformat())
+            return
+        continue
+
+    print("Human present at "+datetime.datetime.now().isoformat())
+    
+    # Take picture and upload
+    camera.capture('image.jpg')
+    print("Picture taken at "+datetime.datetime.now().isoformat())
+    t = Thread(target=uploadGD)
+    t.start()
 
 # Create callback for door
-GPIO.add_event_callback(door, door_callback)
+#GPIO.add_event_callback(door, door_callback)
 
 # Run forever
 while True:
-    continue
+    if not GPIO.input(door):
+        door_callback()
