@@ -17,7 +17,7 @@ app = Flask(__name__)
 def index():
     # Create new Events object and get next 5 events
     events = Events()
-    event_list = events.getEvents()
+    event_list = events.getEvents(10)
 
     # Create table from events
     items = []

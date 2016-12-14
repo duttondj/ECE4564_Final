@@ -52,14 +52,14 @@
             }
 
             #weather ul {
-              margin: 0;
+              margin: 10;
               padding: 0;
             }
 
             #weather li {
               background: #fff;
               background: rgba(192,192,192,0.90);
-              padding: 20px;
+              padding: 15px;
               display: inline-block;
               border-radius: 5px;
             }
@@ -76,7 +76,7 @@
         <script>
             $(document).ready(function() {  
               getWeather(); //Get the initial weather.
-              setInterval(getWeather, 60000); //Update the weather every 10 minutes.
+              //setInterval(getWeather, 60000); //Update the weather every 10 minutes.
             });
 
             function getWeather() {
@@ -84,10 +84,12 @@
                 location: '24060',
                 unit: 'f',
                 success: function(weather) {
-                  html = '<h2>'+weather.temp+'&deg;'+weather.units.temp+'</h2>';
-                  html += '<ul><li>'+weather.city+', '+weather.region+'</li>';
+                  html = '<h2>'+weather.temp+'&deg;'+weather.units.temp+'</h2><ul><li>'+weather.city+', '+weather.region+'</li>';
                   html += '<li class="currently">'+weather.currently+'</li>';
                   html += '<li>'+weather.wind.direction+' '+weather.wind.speed+' '+weather.units.speed+'</li></ul>';
+                  html += '<p><ul><li>High: '+weather.high+'&deg;'+weather.units.temp+'</li>';
+                  html += '<li>Low: '+weather.low+'&deg;'+weather.units.temp+'</li>';
+                  html += '<li>Tom: '+weather.forecast[1].high+'&deg;'+weather.units.temp+'</li></ul></p>';
                   $("#weather").html(html);
                 },
                 error: function(error) {
@@ -98,16 +100,16 @@
         </script>
     </head>
     <body>
-        <div id="outer">
+        <!-- <div id="outer">
             <div id="inner">
                 <h1>RaspReminder</h1>
             </div>
-        </div>
+        </div> -->
         <div style="float:left; width:50%;">
             <div id="weather"></div>
         </div>
         <div style="float:right; width:50%; ">
-            <h2>Next 5 Events on Your Calendar:</h2>
+            <h2>Next 10 Events on Your Calendar:</h2>
             {{table}}
         </div>
     </body>
